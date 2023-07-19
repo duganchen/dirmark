@@ -30,12 +30,6 @@ def existing_dir(directory: str) -> str:
         raise argparse.ArgumentTypeError()
     return directory
 
-def existing_file(file: str):
-    path = pathlib.Path(file)
-    if not path.is_file():
-        raise argparse.ArgumentTypeError()
-    return path
-
 def add_bookmark(args):
     # This is the format.
     bm = {"bookmarks": []}
@@ -54,11 +48,10 @@ def add_bookmark(args):
     with open(args.bookmarks, "w") as f:
         json.dump(bm, f, indent=4)
 
-def list_bookmarks(bookmarks: pathlib.Path):
-    pass
-
-def choose_bookmark(directory: pathlib.Path, bookmarks: pathlib.Path):
-    pass
+def list_bookmarks(args):
+    bookmarks = json.load(args.bookmarks)
+    for bookmark in bookmarks["bookmarks"]:
+        print(bookmark)
 
 if __name__ == '__main__':
     main()
