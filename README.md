@@ -4,9 +4,9 @@ This is (to be) a directory bookmarker. I wrote (am writing) it to integrate int
 
 Usage:
 
-    dirmark add <directory> /path/to/dirmarks.yaml
+    dirmark add <directory> /path/to/bookmarks.json
 
-    # Pipe the output into FZF
+    # Pipe this output into FZF
     dirmark list <current_directory> /path/to/dirmarks.yaml
 
 What sets this apart from all the zillions of existing directory bookmarkers? "dirmark list" filters current_directory out of the list, and "dirmark add", moves the directory to the top of the list if it's already bookmarked. This

@@ -21,6 +21,7 @@ def main():
     add_parser.add_argument('bookmarks', type=pathlib.Path)
     list_parser = subparsers.add_parser('list')
     list_parser.set_defaults(func=list_bookmarks)
+    list_parser.add_argument('current_dir', type=existing_dir)
     list_parser.add_argument('bookmarks', type=argparse.FileType("r"))
     args = parser.parse_args()
     args.func(args)
@@ -51,7 +52,8 @@ def add_bookmark(args):
 def list_bookmarks(args):
     bookmarks = json.load(args.bookmarks)
     for bookmark in bookmarks["bookmarks"]:
-        print(bookmark)
+        if bookmark != args.current_dir:
+            print(bookmark)
 
 if __name__ == '__main__':
     main()
