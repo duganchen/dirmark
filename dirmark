@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+
+import argparse
+
+
+# Picking this format mainly because it's part of the standard library.
+import json
+
+import os
+import pathlib
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(
+                        prog='dirmark',
+                        description='directory bookmarker')
+    subparsers = parser.add_subparsers(required=True)
+    add_parser = subparsers.add_parser('add')
+    add_parser.set_defaults(func=add_bookmark)
+    add_parser.add_argument('directory', type=existing_dir)
+    add_parser.add_argument('bookmarks', type=pathlib.Path)
+    list_parser = subparsers.add_parser('list')
+    list_parser.set_defaults(func=list_bookmarks)
+    list_parser.add_argument('bookmarks', type=argparse.FileType("r"))
+    args = parser.parse_args()
+    args.func(args)
+
+def existing_dir(directory: str) -> str:
+    if not os.path.isdir(directory):
+        raise argparse.ArgumentTypeError()
+    return directory
+
+def existing_file(file: str):
+    path = pathlib.Path(file)
+    if not path.is_file():
+        raise argparse.ArgumentTypeError()
+    return path
+
+def add_bookmark(args):
+    # This is the format.
+    bm = {"bookmarks": []}
+    if args.bookmarks.is_file():
+        with open(args.bookmarks) as f:
+            bm = json.load(f)
+
+    bookmarks = [args.directory]
+
+    for bookmark in bm["bookmarks"]:
+        if os.path.isdir(bookmark) and bookmark != args.directory:
+            bookmarks.append(bookmark)
+
+    bm["bookmarks"] = bookmarks
+
+    with open(args.bookmarks, "w") as f:
+        json.dump(bm, f, indent=4)
+
+def list_bookmarks(bookmarks: pathlib.Path):
+    pass
+
+def choose_bookmark(directory: pathlib.Path, bookmarks: pathlib.Path):
+    pass
+
+if __name__ == '__main__':
+    main()
